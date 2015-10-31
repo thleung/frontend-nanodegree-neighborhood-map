@@ -44,8 +44,8 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
     	content: this.infoHtml()
 	});
 
-	console.log("marker name: " + this.marker.name);
-	console.log("marker title: " + this.marker.title);
+	console.log("OOO OOO marker name: " + this.marker.name);
+	console.log("OOO OOOmarker title: " + this.marker.title);
 
 	//listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
@@ -71,7 +71,7 @@ var fourSquareList = {
 // Sets the map on all markers in the array.
 function setMapOnAll(map) {
   for (var i = 0; i < markers.length; i++) {
-  	console.log("setMapOnAll at " + i);
+  	console.log("markers[" + i + "].name: " + markers[i].name);
     markers[i].setMap(map);
   }
 }
@@ -164,7 +164,7 @@ var displayMapModel = function() {
             	}
             	console.log("photo url: " + photoUrl);
 
-            	locationList.push(new Location( name, categories, address, latitude, longitude, photoUrl, urlVenue));
+            	locationList.push(new Location( name, categories, address, phone, latitude, longitude, photoUrl, urlVenue));
             	//locationList[locationList.length - 1].marker.setMap(map);
             	console.log("length of locationList: " + locationList.length);
 
@@ -172,6 +172,7 @@ var displayMapModel = function() {
 				console.log("adding marker");
 				var length = locationList.length - 1;
 				markers.push(locationList[length].marker);
+				showMarkers();
             }
 		});
 	}
