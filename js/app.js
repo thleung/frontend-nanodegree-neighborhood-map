@@ -30,8 +30,8 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 	// _blank opens link in new tab, not in current tab
 	this.infoHtml = ko.computed(function() {
 		console.log("inside infoHtml, web: " + web);
-  		return '<h4>'+ name + title + '</h4>' + '<img src=' + pic +
-    	'>' + '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>';
+  		return '<h4>'+ name + '</h4>' + '<img src=' + pic +
+    	'>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' + '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>';
  	}, this);
 
 	
@@ -50,8 +50,9 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 	//listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
  		console.log("marker event web: " + web);
-    	infowindow.setContent('<h4>'+ name + title + '</h4>' + '<img src=' + pic +
-        '>' + '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
+    	infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
+        '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
+        '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
         console.log('<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
         infowindow.open(map, this);
 	});
@@ -64,7 +65,8 @@ var fourSquareList = {
 	sorrento: '4b33e50bf964a5206c2125e3',
 	dunkindonut: '4b7f0326f964a520421030e3',
 	starbucks: '4b1aa48df964a52032ee23e3',
-	londonpizza: '4aa57324f964a5206a4820e3'
+	londonpizza: '4aa57324f964a5206a4820e3',
+	actongas: '4c4c9036c668e21ebae9b1fb'
 };
 
 // *********** NEW **********************
@@ -180,27 +182,39 @@ var displayMapModel = function() {
 	// display markers on map
 	showMarkers();
 
+
 	self.filter = ko.observable('');
 	self.temp = ko.observableArray();
-	self.search = function () {
+  	self.search = function () {
     	map.setCenter({lat: 42.4850931, lng: -71.43284});
     	infowindow.close();
     	var filter = self.filter();
-        deleteMarkers();
-        self.places.removeAll();
+    	deleteMarkers();
+    	self.places.removeAll();
     	var len = locations.length;
     	for (var i = 0; i < len; i++) {
-      		if ((locationList)[i].nameTitle().toLowerCase().indexOf(filter.toLowerCase()) >= 0 ) {
-            	self.temp().push(locations[i]);    
+    		if ((locations)[i].nameTitle().toLowerCase().indexOf(filter.toLowerCase()) >= 0 ) {
+        		self.temp().push(locations[i]);    
         	}
     	}
     	if (self.temp().length === 0) {
-       		self.locationList.push(new Location('No items match your search', "", '', '', '', ''));
+    		self.places.push(new Place('No items match your search', "", '', '', '', ''));
     	}
-    	self.locationList(self.temp());
+    	self.places(self.temp());
     	self.placeMarkers();
       
   	};
+
+  	// Create the search box and link it to the UI element.
+  	var input = document.getElementById('pac-input');
+  	var searchBox = new google.maps.places.SearchBox(input);
+  	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+  	// Bias the SearchBox results towards current map's viewport.
+  	/*map.addListener('bounds_changed', function() {
+    	searchBox.setBounds(map.getBounds());
+  	});*/
+
 };
 
 /* ===== Octopus ===== */
