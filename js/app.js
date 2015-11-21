@@ -13,6 +13,13 @@ var infowindow = new google.maps.InfoWindow({
   maxWidth: 200
 });
 
+//make cursor appear in search bar automatically
+var setFocus = function() {
+  var input = document.getElementById ("theFieldID");
+  input.focus ();
+  };
+setFocus();
+
 /* ===== Model ===== */
 var Location = function( name, title, address, phone, latitude, longitude, pic, web) {
 

@@ -19,16 +19,37 @@
 
 <body>
     <!--container div required by bootstrap-->
-    <!--<div class="container-fluid">
-        <div class='row'>
+    <div class="container-fluid">
 
+        <div class='row'>
+            <!--begins column div-->
+            <div class='col-md-4'>
+                <form id='theFormID' class='input-group form'>
+                    <input id='theFieldID' class='search form-control field input-group col-sm-2' placeholder="Search…" type="search" data-bind='textInput: filter, event: { keyup: search }' autocomplete="off"
+                </form>
+                <!--closes column div-->
+            </div>
+            <!--closes row div-->
         </div>
--->
-        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+
+        <!--begins 'venues' button div-->
+        <div class='menu'>
+            <div class="mainbutton">
+                <button type="button" class="btn btn-primary" data-bind="click: toggleMenu">Venues</button>
+            </div>
+            <!--ends the div for 'venues' and begins divs for BV-Folks and list-view-->
+            <div class='BV-folks' data-bind='visible:showMenu'>
+                <div class="list-group list-view" data-bind="foreach: places">
+                    <a href="#" class="list-group-item" data-bind="click: $parent.listClick"> <span data-bind="text: nameTitle, click: $parent.listClick"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div id="map_canvas">
         </div>
         <!--closing of container div-->
-<!--    </div>-->
+    </div>-->
 
     <script src="js/bootstrap.min.js"></script>
     <script src="js/app.js"></script>

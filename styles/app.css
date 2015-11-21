@@ -1,37 +1,122 @@
 html, 
-body,
+body, 
 #map_canvas {
-	height: 100%; 
-	width: 100%; 
-	margin: 0; 
-	padding: 0; 
-	z-index: 0;
+  height: 100%; 
+  width: 100%; 
+  margin: 0; 
+  padding: 0; 
+  z-index: 0;
 }
+/*.iwphoto {
+  max-width: 5px;
+  max-height: 20px;
+  }
+*/
 
 /*styles for setting the container div to the same as the map canvas height and width*/
 .container-fluid {
-	height:100%;
-	width: 100%;
+  height:100%;
+  width: 100%;
 }
 
-#pac-input {
+/*using fixed positioning so that I can use the z axis..though other positioning settings also work*/
+/*
+.form {
+  position: fixed;
+  z-index: 5;
+}
+*/
+
+/*styles for making search bar colors consistent with list view colors can't get it to work without an ID*/
+#theFieldID {
   background-color: #fff;
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
-  text-overflow: ellipsis;
-  width: 300px;
 }
+/*hides the search bar when the screen gets below a certain*/
+/*
+@media (max-width: 700px) {
+  .search {
+    margin: 0px;
+    padding: none;
+    position: relative;
+    max-width: 0px;
+    z-index: 5;
+  };
+  .mainbutton {
+    margin: 0px;
+    padding: none;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 10;
+  };
+  .BV-folks {
+    margin-top: 36px;
+    margin-right: 0px;
+    max-height: 200px;
+  };
+  .list-view {
+    max-width: 140px;
+    max-height: 150px;
+  };
+}*/
 
-.controls {
-  margin-top: 10px;
-  border: 1px solid transparent;
-  border-radius: 2px 0 0 2px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  height: 32px;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+/*styles for making sure map has functioning z index as well as no white space from the container div*/
+#map_canvas img{
+    max-width: none;
+    position: relative;
+    z-index: 2;
+    height: 100%; 
+    margin: 0; 
+    padding: 0;
+}
+/*styles for div containing the search function..max width only way I could keep the bar from over expanding*/
+.search {
+  position: relative;
+  margin-left: 7em;
+  margin-right: 20px;
+  margin-top: 2em;
+  z-index: 5;
+  max-width: 180px;
+}
+/*styles for div containing the main button*/
+.mainbutton {
+  list-style-type: none;
+  margin: 3em;
+  border: none;
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  z-index: 10;
+}
+/*styles for div containing the list as a whole*/
+.BV-folks {
+  list-style-type: none;
+  min-width: 15%;
+  max-width:25%;
+  background-color: #fff;
+  border-top: solid;
+  border-bottom: solid;
+  border-left: solid;
+  border-width: 1px;
+  border-color: #337ab7;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 10;
+  margin-top: 100px ;
+  margin-right:15px;
+  max-height: 400px;
+  overflow: auto;
+}
+/*styles for div containing each list item*/
+.list-view {
+  list-style-type: none;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+}
+a {
+  color: blue;
+  text-decoration: none;
 }
