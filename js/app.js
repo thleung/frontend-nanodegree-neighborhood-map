@@ -32,6 +32,9 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 	this.longitude = ko.observable(longitude);
 	this.pic = ko.observable(pic);
 	this.web = ko.observable(web);
+  this.nameTitle = ko.computed(function() {
+ return this.name() + " " + this.title();
+ }, this);
 
 	// This is the info window that pops up when marker is clicked
 	// _blank opens link in new tab, not in current tab
@@ -51,12 +54,12 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
     	content: this.infoHtml()
 	});
 
-	console.log("OOO OOO marker name: " + this.marker.name);
-	console.log("OOO OOOmarker title: " + this.marker.title);
+	//console.log("OOO OOO marker name: " + this.marker.name);
+	//console.log("OOO OOOmarker title: " + this.marker.title);
 
 	//listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
- 		console.log("marker event web: " + web);
+ 		//console.log("marker event web: " + web);
     	infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
         '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
         '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
@@ -80,7 +83,7 @@ var fourSquareList = {
 // Sets the map on all markers in the array.
 function setMapOnAll(map) {
   for (var i = 0; i < markers.length; i++) {
-  	console.log("markers[" + i + "].name: " + markers[i].name);
+  	//console.log("markers[" + i + "].name: " + markers[i].name);
     markers[i].setMap(map);
   }
 }
@@ -110,6 +113,10 @@ var displayMapModel = function() {
 
 	console.log("inside displayLocation");
 
+  self.showMenu = ko.observable(false);
+  self.toggleMenu = function () {
+    $( ".BV-folks" ).toggle('fast');
+  };
 	// Markers for map
 	locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
 					new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org")
@@ -117,7 +124,7 @@ var displayMapModel = function() {
 
 	//function to add a marker to the markers array
   	var addMarker = function () {
-  		console.log("Inside ADDMARKER");
+  		//console.log("Inside ADDMARKER");
     	for (var i = 0; i < locationList.length; i++) {
     		console.log(i);
       		var mark = locationList[i].marker;
@@ -128,10 +135,21 @@ var displayMapModel = function() {
 
  	// add markers to list
  	for (var i =0; i < locationList.length; i++) {
- 		console.log( "adding marker " + i + " for locationList");
+ 		//console.log( "adding marker " + i + " for locationList");
  		markers.push(locationList[i].marker);
  	}
-	console.log("calling for loop for foursquare at length");
+
+
+  self.places = ko.observableArray();
+  self.placeMarkers = function() {
+    for (var i = 0; i < self.places().length; i++) {
+      /*addMarker(self.places()[i].lat(), self.places()[i].long(), self.places()[i].nameTitle(), self.places()[i].htmlImg());*/
+      addMarker();
+      }
+    //showMarkers();
+  };
+
+	//console.log("calling for loop for foursquare at length");
 	// Use ajax to call foursquare api to get information regarding places
 	for (var venue in fourSquareList) {
 		var id = fourSquareList[venue];
@@ -153,11 +171,11 @@ var displayMapModel = function() {
             	var address = venue.location.address;
             	var phone = venue.contact.formattedPhone;
 
-            	console.log("name: " + name);
-            	console.log("id: " + id);
-            	console.log("urlVenue:" + urlVenue);
-            	console.log("categories: " + categories);
-            	console.log("phone: " + phone);
+            	//console.log("name: " + name);
+            	//console.log("id: " + id);
+            	//console.log("urlVenue:" + urlVenue);
+            	//console.log("categories: " + categories);
+            	//console.log("phone: " + phone);
 
             	// Photo image for location
             	var photoUrl;
@@ -175,10 +193,12 @@ var displayMapModel = function() {
 
             	locationList.push(new Location( name, categories, address, phone, latitude, longitude, photoUrl, urlVenue));
             	//locationList[locationList.length - 1].marker.setMap(map);
-            	console.log("length of locationList: " + locationList.length);
+            	//console.log("length of locationList: " + locationList.length);
+              self.places(locationList.slice(0));
+              //console.log(self.places()[locationList.length - 1].name());
 
             	// Add markers to map
-				console.log("adding marker");
+				//console.log("adding marker");
 				var length = locationList.length - 1;
 				markers.push(locationList[length].marker);
 				showMarkers();
@@ -191,9 +211,9 @@ var displayMapModel = function() {
 
 
 	self.filter = ko.observable('');
-	self.temp = ko.observableArray();
-  	self.search = function () {
-    	map.setCenter({lat: 42.4850931, lng: -71.43284});
+	//self.temp = ko.observableArray();
+  self.search = function () {
+    	/*map.setCenter({lat: 42.4850931, lng: -71.43284});
     	infowindow.close();
     	var filter = self.filter();
     	deleteMarkers();
@@ -209,14 +229,14 @@ var displayMapModel = function() {
     	}
     	self.places(self.temp());
     	self.placeMarkers();
-      
-  	};
+      */
+  };
 
   	// Create the search box and link it to the UI element.
-  	var input = document.getElementById('pac-input');
+  	/*var input = document.getElementById('pac-input');
   	var searchBox = new google.maps.places.SearchBox(input);
   	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
+    */
   	// Bias the SearchBox results towards current map's viewport.
   	/*map.addListener('bounds_changed', function() {
     	searchBox.setBounds(map.getBounds());
