@@ -211,17 +211,17 @@ var displayMapModel = function() {
 
 
 	self.filter = ko.observable('');
-	//self.temp = ko.observableArray();
+	self.temp = ko.observableArray();
   self.search = function () {
-    	/*map.setCenter({lat: 42.4850931, lng: -71.43284});
+    	map.setCenter({lat: 42.4850931, lng: -71.43284});
     	infowindow.close();
     	var filter = self.filter();
     	deleteMarkers();
     	self.places.removeAll();
-    	var len = locations.length;
+    	var len = locationList.length;
     	for (var i = 0; i < len; i++) {
-    		if ((locations)[i].nameTitle().toLowerCase().indexOf(filter.toLowerCase()) >= 0 ) {
-        		self.temp().push(locations[i]);    
+    		if ((locationList)[i].nameTitle().toLowerCase().indexOf(filter.toLowerCase()) >= 0 ) {
+        		self.temp().push(locationList[i]);    
         	}
     	}
     	if (self.temp().length === 0) {
@@ -229,18 +229,13 @@ var displayMapModel = function() {
     	}
     	self.places(self.temp());
     	self.placeMarkers();
-      */
   };
 
-  	// Create the search box and link it to the UI element.
-  	/*var input = document.getElementById('pac-input');
-  	var searchBox = new google.maps.places.SearchBox(input);
-  	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-    */
-  	// Bias the SearchBox results towards current map's viewport.
-  	/*map.addListener('bounds_changed', function() {
-    	searchBox.setBounds(map.getBounds());
-  	});*/
+  self.listClick = function(place) {
+    var mark = place.marker;
+    //console.log("mark name:" + place.marker.title);
+    google.maps.event.trigger(mark,"click");
+  };
 
 };
 
