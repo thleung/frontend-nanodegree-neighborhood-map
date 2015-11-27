@@ -1,3 +1,18 @@
+<!--  
+ *  Thomas Leung
+ *  Project: Nanodegree Neighborhood Map
+ *  ------------------------------------
+ *  Displays local google map of my area and local attractions.
+ *  Markers on map lists areas of interest and links on info
+ *  window link to websites.
+ *  
+ *  Markers on google map are a combination of selected personal
+ *  interests and data pulled from foursquare api
+ *
+ *  Map can be used to search the markers for specific interests
+ *  either by search bar or by clicking on location bar
+ -->
+
 <!doctype html>
 <html>
 
@@ -35,7 +50,7 @@
         <!--begins 'venues' button div-->
         <div class='menu'>
             <div class="mainbutton">
-                <button type="button" class="btn btn-primary" data-bind="click: toggleMenu">Venues</button>
+                <button type="button" class="btn btn-primary" data-bind="click: toggleMenu">Locations</button>
             </div>
             <!--ends the div for 'venues' and begins divs for BV-Folks and list-view-->
             <div class='BV-folks' data-bind='visible:showMenu'>

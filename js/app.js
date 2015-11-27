@@ -1,5 +1,3 @@
-var markers = [];
-
 var mapOptions = {
   zoom: 14,
   center: new google.maps.LatLng(42.4850931, -71.43284)
@@ -68,7 +66,12 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 	});
 }
 
-var locationList = [];
+var markers = [];
+//var locationList = [];
+var locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
+          new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org"),
+          new Location("Grassy Pond Conservation Area", "Park", "Acton", "(978) 929-6640", 42.501478, -71.448746, "images/grassypondpanorama.jpg" , "http://actontrails.org/DescGrassyPond.htm")
+  ];
 //locationList = ko.observableArray();
 
 var fourSquareList = {
@@ -81,25 +84,30 @@ var fourSquareList = {
 
 // *********** NEW **********************
 // Sets the map on all markers in the array.
-function setMapOnAll(map) {
+var setAllMap = function setAllMap(map) {
+  console.log("setAllMap: marker.length: " + markers.length);
   for (var i = 0; i < markers.length; i++) {
-  	//console.log("markers[" + i + "].name: " + markers[i].name);
-    markers[i].setMap(map);
+  	console.log(i);
+    var mark = markers[i];
+    mark.setMap(map);
   }
 }
 
 // Removes the markers from the map, but keeps them in the array.
 function clearMarkers() {
-  setMapOnAll(null);
+  console.log("clearing markers on map, by setting setAllMap to null");
+  setAllMap(null);
 }
 
 // Shows any markers currently in the array.
 function showMarkers() {
-  setMapOnAll(map);
+  console.log("inside showMarkers, ready to show markers in array by setting setAllMap to map");
+  setAllMap(map);
 }
 
 // Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
+  console.log("deleting markers");
   clearMarkers();
   markers = [];
 }
@@ -118,18 +126,20 @@ var displayMapModel = function() {
     $( ".BV-folks" ).toggle('fast');
   };
 	// Markers for map
-	locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
-					new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org")
-	];
+	/*locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
+					new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org"),
+          new Location("Grassy Pond Conservation Area", "Park", "Acton", "(978) 929-6640", 42.501478, -71.448746, "images/grassypondpanorama.jpg" , "http://actontrails.org/DescGrassyPond.htm")
+	];*/
 
 	//function to add a marker to the markers array
   	var addMarker = function () {
   		//console.log("Inside ADDMARKER");
-    	for (var i = 0; i < locationList.length; i++) {
-    		console.log(i);
-      		var mark = locationList[i].marker;
-      		mark.setMap(map);
-      		console.log("added marker");
+    	//for (var i = 0; i < locationList.length; i++) {
+      //		var mark = locationList[i].marker;
+      for (var i = 0; i < self.places().length; i++) {
+          markers.push(self.places()[i].marker);
+      		//mark.setMap(map);
+      		//console.log("added marker");
     	}
  	};
 
@@ -139,75 +149,79 @@ var displayMapModel = function() {
  		markers.push(locationList[i].marker);
  	}
 
+  var loadData = function (){
+    self.places = ko.observableArray();
+    self.placeMarkers = function() {
+      console.log("placeMarkers: places length: " + self.places().length);
+      for (var i = 0; i < self.places().length; i++) {
+        /*addMarker(self.places()[i].lat(), self.places()[i].long(), self.places()[i].nameTitle(), self.places()[i].htmlImg());*/
+        addMarker();
+        }
+        showMarkers();
+    };
 
-  self.places = ko.observableArray();
-  self.placeMarkers = function() {
-    for (var i = 0; i < self.places().length; i++) {
-      /*addMarker(self.places()[i].lat(), self.places()[i].long(), self.places()[i].nameTitle(), self.places()[i].htmlImg());*/
-      addMarker();
-      }
-    //showMarkers();
-  };
+    //console.log("calling for loop for foursquare at length");
+    // Use ajax to call foursquare api to get information regarding places
+    for (var venue in fourSquareList) {
+		  var id = fourSquareList[venue];
+      var urlFourSquare = 'https://api.foursquare.com/v2/venues/' + id + '?&client_id=EWW4OGHIEC44JKVDUQF2VYOVIT4LEHYN5D13QZDOTFGDXA2C' +
+         	'&client_secret=VCN1IO4NYUBECLHW3I2IXXNK55CJ3532ESM53IGGSCFC11ET&v=20151027&m=foursquare';
 
-	//console.log("calling for loop for foursquare at length");
-	// Use ajax to call foursquare api to get information regarding places
-	for (var venue in fourSquareList) {
-		var id = fourSquareList[venue];
-      	var urlFourSquare = 'https://api.foursquare.com/v2/venues/' + id + '?&client_id=EWW4OGHIEC44JKVDUQF2VYOVIT4LEHYN5D13QZDOTFGDXA2C' +
-                	'&client_secret=VCN1IO4NYUBECLHW3I2IXXNK55CJ3532ESM53IGGSCFC11ET&v=20151027&m=foursquare';
+		  $.ajax({
+		    url: urlFourSquare,
+        dataType: 'jsonp',
+        success: function(response){
+          var venue = response.response.venue;
+          var name = venue.name;
+          var id = venue.id;
+          var location = venue.location;
+          var categories = venue.categories[0].name;
+          var urlVenue = venue.url;
+          var latitude = venue.location.lat;
+          var longitude = venue.location.lng;
+          var address = venue.location.address;
+          var phone = venue.contact.formattedPhone;
 
-		$.ajax({
-			url: urlFourSquare,
-			dataType: 'jsonp',
-			success: function(response){
-            	var venue = response.response.venue;
-            	var name = venue.name;
-            	var id = venue.id;
-            	var location = venue.location;
-            	var categories = venue.categories[0].name;
-            	var urlVenue = venue.url;
-            	var latitude = venue.location.lat;
-            	var longitude = venue.location.lng;
-            	var address = venue.location.address;
-            	var phone = venue.contact.formattedPhone;
+          //console.log("name: " + name);
+          //console.log("id: " + id);
+          //console.log("urlVenue:" + urlVenue);
+          //console.log("categories: " + categories);
+          //console.log("phone: " + phone);
 
-            	//console.log("name: " + name);
-            	//console.log("id: " + id);
-            	//console.log("urlVenue:" + urlVenue);
-            	//console.log("categories: " + categories);
-            	//console.log("phone: " + phone);
+          // Photo image for location
+          var photoUrl;
+          if (typeof venue.photos.groups[0] === 'undefined') {
+          	// There are no images for this venue on foursquare
+          	photoUrl = "images/Not_available.jpg";
+          } else {
+          	// There is at least one image for this venue on foursquare
+          	// To create foursquare img link, combine .prefix + size + .suffix
+          	var venuePrefix = venue.photos.groups[0].items[1].prefix;
+          	var venueSuffix = venue.photos.groups[0].items[1].suffix;
+          	photoUrl = venuePrefix + 150 + venueSuffix;
+          }
+          //console.log("photo url: " + photoUrl);
 
-            	// Photo image for location
-            	var photoUrl;
-            	if (typeof venue.photos.groups[0] === 'undefined') {
-            		// There are no images for this venue on foursquare
-            		photoUrl = "images/Not_available.jpg";
-            	} else {
-            		// There is at least one image for this venue on foursquare
-            		// To create foursquare img link, combine .prefix + size + .suffix
-            		var venuePrefix = venue.photos.groups[0].items[1].prefix;
-            		var venueSuffix = venue.photos.groups[0].items[1].suffix;
-            		photoUrl = venuePrefix + 150 + venueSuffix;
-            	}
-            	console.log("photo url: " + photoUrl);
+          locationList.push(new Location( name, categories, address, phone, latitude, longitude, photoUrl, urlVenue));
+          //locationList[locationList.length - 1].marker.setMap(map);
+          //console.log("length of locationList: " + locationList.length);
+          self.places(locationList.slice(0));
+          self.placeMarkers();
+          //console.log(self.places()[locationList.length - 1].name());
 
-            	locationList.push(new Location( name, categories, address, phone, latitude, longitude, photoUrl, urlVenue));
-            	//locationList[locationList.length - 1].marker.setMap(map);
-            	//console.log("length of locationList: " + locationList.length);
-              self.places(locationList.slice(0));
-              //console.log(self.places()[locationList.length - 1].name());
+          // Add markers to map
+				  //console.log("adding marker");
+				  //var length = locationList.length - 1;
+				  //markers.push(locationList[length].marker);
+				  //showMarkers();
+        }
+      });
+    }
+	};
 
-            	// Add markers to map
-				//console.log("adding marker");
-				var length = locationList.length - 1;
-				markers.push(locationList[length].marker);
-				showMarkers();
-            }
-		});
-	}
-
+  loadData();
 	// display markers on map
-	showMarkers();
+	//showMarkers();
 
 
 	self.filter = ko.observable('');
@@ -216,8 +230,10 @@ var displayMapModel = function() {
     	map.setCenter({lat: 42.4850931, lng: -71.43284});
     	infowindow.close();
     	var filter = self.filter();
+      console.log("right before deleteMarker running");
     	deleteMarkers();
     	self.places.removeAll();
+      console.log("places length: " + self.places.length);
     	var len = locationList.length;
     	for (var i = 0; i < len; i++) {
     		if ((locationList)[i].nameTitle().toLowerCase().indexOf(filter.toLowerCase()) >= 0 ) {
@@ -227,6 +243,7 @@ var displayMapModel = function() {
     	if (self.temp().length === 0) {
     		self.places.push(new Place('No items match your search', "", '', '', '', ''));
     	}
+      /************* Work on this ****************/
     	self.places(self.temp());
     	self.placeMarkers();
   };
@@ -238,8 +255,5 @@ var displayMapModel = function() {
   };
 
 };
-
-/* ===== Octopus ===== */
-
 
 ko.applyBindings(new displayMapModel());
