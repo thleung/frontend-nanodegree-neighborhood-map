@@ -1,11 +1,12 @@
 var mapOptions = {
   zoom: 14,
-  center: new google.maps.LatLng(42.4850931, -71.43284)
+  center: new google.maps.LatLng(42.4850931, -71.43284) // Sets the location for the google map api
 };
 var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 var content = document.createElement("DIV");
-// variable that is the one and only info window of the page..content changes upon a click event
+
+// Upon clicking markers on google map, this is the infowindow that pops up.  Sets the size
 var infowindow = new google.maps.InfoWindow({
   content: content,
   maxWidth: 200
@@ -34,8 +35,8 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
  return this.name() + " " + this.title();
  }, this);
 
-	// This is the info window that pops up when marker is clicked
-	// _blank opens link in new tab, not in current tab
+	// This is the info in the infowindow that pops up when marker is clicked
+	// _blank opens link in new tab, not in current tab so it does not exit google map
 	this.infoHtml = ko.computed(function() {
 		console.log("inside infoHtml, web: " + web);
   		return '<h4>'+ name + '</h4>' + '<img src=' + pic +
@@ -43,7 +44,7 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
  	}, this);
 
 	
-	// Create marker to location on google map
+	// Create marker for location on google map.  Contains name, title, position and content for marker.
 	this.marker = new google.maps.Marker({
 		name: name,
 		title: title,
@@ -52,10 +53,7 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
     	content: this.infoHtml()
 	});
 
-	//console.log("OOO OOO marker name: " + this.marker.name);
-	//console.log("OOO OOOmarker title: " + this.marker.title);
-
-	//listener to add the information window to each marker
+	// listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
  		//console.log("marker event web: " + web);
     	infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
@@ -67,13 +65,14 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 }
 
 var markers = [];
-//var locationList = [];
+
+// This is the initial list of locations to be added to markers
 var locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
           new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org"),
           new Location("Grassy Pond Conservation Area", "Park", "Acton", "(978) 929-6640", 42.501478, -71.448746, "images/grassypondpanorama.jpg" , "http://actontrails.org/DescGrassyPond.htm")
   ];
-//locationList = ko.observableArray();
 
+// The locations that fourSquare api will be used to find
 var fourSquareList = {
 	sorrento: '4b33e50bf964a5206c2125e3',
 	dunkindonut: '4b7f0326f964a520421030e3',
@@ -82,8 +81,9 @@ var fourSquareList = {
 	actongas: '4c4c9036c668e21ebae9b1fb'
 };
 
-// *********** NEW **********************
 // Sets the map on all markers in the array.
+// If map is passed in, sets markers on map.
+// If null is passed in, it removes the markers on map instead.
 var setAllMap = function setAllMap(map) {
   console.log("setAllMap: marker.length: " + markers.length);
   for (var i = 0; i < markers.length; i++) {
@@ -93,13 +93,13 @@ var setAllMap = function setAllMap(map) {
   }
 }
 
-// Removes the markers from the map, but keeps them in the array.
+// Clears the markers on the map
 function clearMarkers() {
   console.log("clearing markers on map, by setting setAllMap to null");
   setAllMap(null);
 }
 
-// Shows any markers currently in the array.
+// Display markers on map
 function showMarkers() {
   console.log("inside showMarkers, ready to show markers in array by setting setAllMap to map");
   setAllMap(map);
@@ -112,56 +112,44 @@ function deleteMarkers() {
   markers = [];
 }
 
-// ********** END NEW ********************
-
 /* ===== View ===== */
 var displayMapModel = function() {
 
 	var self = this;
 
-	console.log("inside displayLocation");
+	//console.log("inside displayLocation");
 
   self.showMenu = ko.observable(false);
   self.toggleMenu = function () {
     $( ".BV-folks" ).toggle('fast');
   };
-	// Markers for map
-	/*locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
-					new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org"),
-          new Location("Grassy Pond Conservation Area", "Park", "Acton", "(978) 929-6640", 42.501478, -71.448746, "images/grassypondpanorama.jpg" , "http://actontrails.org/DescGrassyPond.htm")
-	];*/
 
 	//function to add a marker to the markers array
-  	var addMarker = function () {
-  		//console.log("Inside ADDMARKER");
-    	//for (var i = 0; i < locationList.length; i++) {
-      //		var mark = locationList[i].marker;
-      for (var i = 0; i < self.places().length; i++) {
-          markers.push(self.places()[i].marker);
-      		//mark.setMap(map);
-      		//console.log("added marker");
-    	}
+  var addMarker = function () {
+    for (var i = 0; i < self.places().length; i++) {
+      markers.push(self.places()[i].marker);
+      //mark.setMap(map);
+      //console.log("added marker");
+    }
  	};
 
  	// add markers to list
  	for (var i =0; i < locationList.length; i++) {
- 		//console.log( "adding marker " + i + " for locationList");
  		markers.push(locationList[i].marker);
  	}
 
+  // Data initially loaded
   var loadData = function (){
     self.places = ko.observableArray();
     self.placeMarkers = function() {
       console.log("placeMarkers: places length: " + self.places().length);
       for (var i = 0; i < self.places().length; i++) {
-        /*addMarker(self.places()[i].lat(), self.places()[i].long(), self.places()[i].nameTitle(), self.places()[i].htmlImg());*/
         addMarker();
         }
         showMarkers();
     };
 
-    //console.log("calling for loop for foursquare at length");
-    // Use ajax to call foursquare api to get information regarding places
+    // Ajax call for places in foursquare
     for (var venue in fourSquareList) {
 		  var id = fourSquareList[venue];
       var urlFourSquare = 'https://api.foursquare.com/v2/venues/' + id + '?&client_id=EWW4OGHIEC44JKVDUQF2VYOVIT4LEHYN5D13QZDOTFGDXA2C' +
@@ -170,7 +158,7 @@ var displayMapModel = function() {
 		  $.ajax({
 		    url: urlFourSquare,
         dataType: 'jsonp',
-        success: function(response){
+        success: function(response){  // If successful call, pull these data from foursquare
           var venue = response.response.venue;
           var name = venue.name;
           var id = venue.id;
@@ -182,13 +170,7 @@ var displayMapModel = function() {
           var address = venue.location.address;
           var phone = venue.contact.formattedPhone;
 
-          //console.log("name: " + name);
-          //console.log("id: " + id);
-          //console.log("urlVenue:" + urlVenue);
-          //console.log("categories: " + categories);
-          //console.log("phone: " + phone);
-
-          // Photo image for location
+          // If photo does not exist, use stock image
           var photoUrl;
           if (typeof venue.photos.groups[0] === 'undefined') {
           	// There are no images for this venue on foursquare
@@ -200,30 +182,28 @@ var displayMapModel = function() {
           	var venueSuffix = venue.photos.groups[0].items[1].suffix;
           	photoUrl = venuePrefix + 150 + venueSuffix;
           }
-          //console.log("photo url: " + photoUrl);
 
+          // Push the info into locationList
           locationList.push(new Location( name, categories, address, phone, latitude, longitude, photoUrl, urlVenue));
-          //locationList[locationList.length - 1].marker.setMap(map);
-          //console.log("length of locationList: " + locationList.length);
-          self.places(locationList.slice(0));
-          self.placeMarkers();
-          //console.log(self.places()[locationList.length - 1].name());
 
-          // Add markers to map
-				  //console.log("adding marker");
-				  //var length = locationList.length - 1;
-				  //markers.push(locationList[length].marker);
-				  //showMarkers();
+          self.places(locationList.slice(0));
+          self.placeMarkers();  // put into marker
         }
       });
     }
 	};
 
+  // loadData is run first time app.js is accessed
   loadData();
-	// display markers on map
-	//showMarkers();
 
-
+  /*  This is the search bar for google map
+   *  In real time as user is typing in the search
+   *  the search bar will filter the markers in memory
+   *  and display only the markers that still fit
+   *  the criteria of the search.  In this case
+   *  the search is set to the location's name and
+   *  title 
+   */
 	self.filter = ko.observable('');
 	self.temp = ko.observableArray();
   self.search = function () {
@@ -241,9 +221,8 @@ var displayMapModel = function() {
         	}
     	}
     	if (self.temp().length === 0) {
-    		self.places.push(new Place('No items match your search', "", '', '', '', ''));
+    		self.places.push(new Place('No match your search', "", '', '', '', ''));
     	}
-      /************* Work on this ****************/
     	self.places(self.temp());
     	self.placeMarkers();
   };
