@@ -22,7 +22,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
     <link rel='stylesheet' href='styles/bootstrap.css' />
-    <link rel="stylesheet" media='(max-width: 400px)' href='styles/media.css'>
+    <link rel="stylesheet" media='(max-width: 400px)' href='styles/phone.css'>
     <link rel="stylesheet" media='(min-width: 400px)' href='styles/app.css'>
     <script src="https://maps.googleapis.com/maps/api/js?"></script>
     <script src="js/knockout-3.3.0.js"></script>
@@ -30,11 +30,10 @@
 </head>
 
 <body>
-    <!--container div required by bootstrap-->
     <div class="container-fluid">
 
+        <!-- This is the search bar on the map -->
         <div class='row'>
-            <!--begins column div-->
             <div class='col-md-4'>
                 <form id='theFormID' class='input-group form'>
                     <input id='theFieldID' class='search form-control field input-group col-sm-2' placeholder="Search…" type="search" data-bind='textInput: filter, event: { keyup: search }' autocomplete="off"
@@ -60,16 +59,16 @@
         </div>
     </div>
 
-    <!--div containing html modal for error message on failed callback-->
+    <!--div containing html modal for error message on failed callback.  Modal plugin is from bootstrap -->
     <div id="myModal" class="modal fade">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Unable to Load FourSquare Locations</h4>
+                    <h4 class="modal-title">Cannot access Foursquare api to download locations</h4>
                 </div>
                 <div class="modal-body">
-                    <p>please check the internet connection</p>
+                    <p>Cannot establish internet connection</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

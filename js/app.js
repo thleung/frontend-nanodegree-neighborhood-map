@@ -20,13 +20,6 @@ var infowindow = new google.maps.InfoWindow({
   maxWidth: 200
 });
 
-//make cursor appear in search bar automatically
-var setFocus = function() {
-  var input = document.getElementById ("theFieldID");
-  input.focus ();
-  };
-setFocus();
-
 /* ===== Model ===== */
 var Location = function( name, title, address, phone, latitude, longitude, pic, web) {
 
@@ -45,9 +38,9 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 
 	// This is the info in the infowindow that pops up when marker is clicked
 	// _blank opens link in new tab, not in current tab so it does not exit google map
-	this.infoHtml = ko.computed(function() {
-		console.log("inside infoHtml, web: " + web);
-  		return '<h4>'+ name + '</h4>' + '<img src=' + pic +
+	this.infoLinkHtml = ko.computed(function() {
+		//console.log("inside infoLinkHtml, web: " + web);
+  	return '<h4>'+ name + '</h4>' + '<img src=' + pic +
     	'>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' + '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>';
  	}, this);
 
@@ -58,21 +51,19 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 		title: title,
     	position: new google.maps.LatLng(latitude,longitude),
     	map: map,
-    	content: this.infoHtml()
+    	content: this.infoLinkHtml()
 	});
 
 	// listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
  		//console.log("marker event web: " + web);
-    	infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
-        '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
-        '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
-        console.log('<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
-        infowindow.open(map, this);
+    infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
+      '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
+      '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
+      //console.log('<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
+      infowindow.open(map, this);
 	});
 }
-
-var markers = [];
 
 // This is the initial list of locations to be added to markers
 var locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
@@ -86,14 +77,18 @@ var fourSquareList = {
 	dunkindonut: '4b7f0326f964a520421030e3',
 	starbucks: '4b1aa48df964a52032ee23e3',
 	londonpizza: '4aa57324f964a5206a4820e3',
-	actongas: '4c4c9036c668e21ebae9b1fb'
+	actongas: '4c4c9036c668e21ebae9b1fb',
+  johnnyrocket: '50f9fbcde4b0c2329104a3b5',
+  tclando: '4b0072aef964a520563e22e3'
 };
+
+var markers = [];
 
 // Sets the map on all markers in the array.
 // If map is passed in, sets markers on map.
 // If null is passed in, it removes the markers on map instead.
 var setAllMap = function setAllMap(map) {
-  console.log("setAllMap: marker.length: " + markers.length);
+  //console.log("setAllMap: marker.length: " + markers.length);
   for (var i = 0; i < markers.length; i++) {
   	console.log(i);
     var mark = markers[i];
@@ -103,19 +98,19 @@ var setAllMap = function setAllMap(map) {
 
 // Clears the markers on the map
 function clearMarkers() {
-  console.log("clearing markers on map, by setting setAllMap to null");
+  //console.log("clearing markers on map, by setting setAllMap to null");
   setAllMap(null);
 }
 
 // Display markers on map
 function showMarkers() {
-  console.log("inside showMarkers, ready to show markers in array by setting setAllMap to map");
+  //console.log("inside showMarkers, ready to show markers in array by setting setAllMap to map");
   setAllMap(map);
 }
 
 // Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
-  console.log("deleting markers");
+  //console.log("deleting markers");
   clearMarkers();
   markers = [];
 }
@@ -124,8 +119,6 @@ function deleteMarkers() {
 var displayMapModel = function() {
 
 	var self = this;
-
-	//console.log("inside displayLocation");
 
   self.showMenu = ko.observable(false);
   self.toggleMenu = function () {
@@ -136,7 +129,6 @@ var displayMapModel = function() {
   var addMarker = function () {
     for (var i = 0; i < self.places().length; i++) {
       markers.push(self.places()[i].marker);
-      //mark.setMap(map);
       //console.log("added marker");
     }
  	};
@@ -185,7 +177,7 @@ var displayMapModel = function() {
           	photoUrl = "images/Not_available.jpg";
           } else {
           	// There is at least one image for this venue on foursquare
-          	// To create foursquare img link, combine .prefix + size + .suffix
+          	// To create foursquare img link, combine .prefix + size + .suffix to get 1st photo
           	var venuePrefix = venue.photos.groups[0].items[1].prefix;
           	var venueSuffix = venue.photos.groups[0].items[1].suffix;
           	photoUrl = venuePrefix + 150 + venueSuffix;
@@ -221,18 +213,20 @@ var displayMapModel = function() {
     	map.setCenter({lat: 42.4850931, lng: -71.43284});
     	infowindow.close();
     	var filter = self.filter();
-      console.log("right before deleteMarker running");
+      //console.log("right before deleteMarker running");
     	deleteMarkers();
     	self.places.removeAll();
-      console.log("places length: " + self.places.length);
+      //console.log("places length: " + self.places.length);
     	var len = locationList.length;
     	for (var i = 0; i < len; i++) {
+        // If the venue location name or title matches the search parameter, keep it
     		if ((locationList)[i].nameTitle().toLowerCase().indexOf(filter.toLowerCase()) >= 0 ) {
         		self.temp().push(locationList[i]);    
         	}
     	}
+      // If there is no match on search, want something for user to see in search bar
     	if (self.temp().length === 0) {
-    		self.places.push(new Place('No match your search', "", '', '', '', ''));
+    		self.places.push(new Place('There is no match on the search', "", '', '', '', ''));
     	}
     	self.places(self.temp());
     	self.placeMarkers();
