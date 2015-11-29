@@ -129,7 +129,7 @@ var displayMapModel = function() {
 
   self.showMenu = ko.observable(false);
   self.toggleMenu = function () {
-    $( ".BV-folks" ).toggle('fast');
+    $( ".location-button-def" ).toggle('fast');
   };
 
 	//function to add a marker to the markers array

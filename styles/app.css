@@ -7,11 +7,6 @@ body,
   padding: 0; 
   z-index: 0;
 }
-/*.iwphoto {
-  max-width: 5px;
-  max-height: 20px;
-  }
-*/
 
 /*styles for setting the container div to the same as the map canvas height and width*/
 .container-fluid {
@@ -20,45 +15,15 @@ body,
 }
 
 /*using fixed positioning so that I can use the z axis..though other positioning settings also work*/
-/*
 .form {
   position: fixed;
   z-index: 5;
 }
-*/
 
 /*styles for making search bar colors consistent with list view colors can't get it to work without an ID*/
 #theFieldID {
   background-color: #fff;
 }
-/*hides the search bar when the screen gets below a certain*/
-/*
-@media (max-width: 700px) {
-  .search {
-    margin: 0px;
-    padding: none;
-    position: relative;
-    max-width: 0px;
-    z-index: 5;
-  };
-  .mainbutton {
-    margin: 0px;
-    padding: none;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    z-index: 10;
-  };
-  .BV-folks {
-    margin-top: 36px;
-    margin-right: 0px;
-    max-height: 200px;
-  };
-  .list-view {
-    max-width: 140px;
-    max-height: 150px;
-  };
-}*/
 
 /*styles for making sure map has functioning z index as well as no white space from the container div*/
 #map_canvas img{
@@ -88,8 +53,9 @@ body,
   right: 15px;
   z-index: 10;
 }
-/*styles for div containing the list as a whole*/
-.BV-folks {
+
+/*styles for div containing the list for location button */
+.location-button-def {
   list-style-type: none;
   min-width: 15%;
   max-width:25%;
@@ -108,6 +74,7 @@ body,
   max-height: 400px;
   overflow: auto;
 }
+
 /*styles for div containing each list item*/
 .list-view {
   list-style-type: none;
@@ -116,6 +83,7 @@ body,
   padding: 0;
   border: none;
 }
+
 a {
   color: blue;
   text-decoration: none;

@@ -48,7 +48,7 @@
                 <button type="button" class="btn btn-primary" data-bind="click: toggleMenu">Locations</button>
             </div>
             <!-- This displays the markers on the map when the Locations button is clicked -->
-            <div class='BV-folks' data-bind='visible:showMenu'>
+            <div class='location-button-def' data-bind='visible:showMenu'>
                 <div class="list-group list-view" data-bind="foreach: places">
                     <a href="#" class="list-group-item" data-bind="click: $parent.listClick"> <span data-bind="text: nameTitle, click: $parent.listClick"></span>
                     </a>
