@@ -1,3 +1,11 @@
+var $myModal = $('#myModal');
+
+// Checks to see if browser online
+online = window.navigator.onLine;
+window.addEventListener("offline", function(e) {alert("Please check your internet connection!");});
+
+window.addEventListener("online", function(e) {alert("Internet onnection is back up!");});
+
 var mapOptions = {
   zoom: 14,
   center: new google.maps.LatLng(42.4850931, -71.43284) // Sets the location for the google map api
@@ -188,7 +196,10 @@ var displayMapModel = function() {
 
           self.places(locationList.slice(0));
           self.placeMarkers();  // put into marker
-        }
+        },
+          error: function (){
+            $myModal.modal('show');
+          }
       });
     }
 	};
@@ -227,9 +238,9 @@ var displayMapModel = function() {
     	self.placeMarkers();
   };
 
+  //
   self.listClick = function(place) {
     var mark = place.marker;
-    //console.log("mark name:" + place.marker.title);
     google.maps.event.trigger(mark,"click");
   };
 

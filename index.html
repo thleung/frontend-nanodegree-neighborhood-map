@@ -22,12 +22,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
     <link rel='stylesheet' href='styles/bootstrap.css' />
-    <!--<link rel="stylesheet" media='(max-width: 700px)' href='styles/media.css'>-->
-    <link rel="stylesheet" media='(min-width: 700px)' href='styles/app.css'>
-    <!--<script src="https://maps.googleapis.com/maps/api/js?"></script>
-         async defer></script>-->
+    <link rel="stylesheet" media='(max-width: 400px)' href='styles/media.css'>
+    <link rel="stylesheet" media='(min-width: 400px)' href='styles/app.css'>
     <script src="https://maps.googleapis.com/maps/api/js?"></script>
-    <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?    v=3.exp&sensor=false&libraries=places,drawing,geometry"></script>-->
     <script src="js/knockout-3.3.0.js"></script>
     <script src="js/jquery-2.1.4.js"></script>
 </head>
@@ -42,17 +39,15 @@
                 <form id='theFormID' class='input-group form'>
                     <input id='theFieldID' class='search form-control field input-group col-sm-2' placeholder="Search…" type="search" data-bind='textInput: filter, event: { keyup: search }' autocomplete="off"
                 </form>
-                <!--closes column div-->
             </div>
-            <!--closes row div-->
         </div>
 
-        <!--begins 'venues' button div-->
+        <!-- This is the Locations button on map -->
         <div class='menu'>
             <div class="mainbutton">
                 <button type="button" class="btn btn-primary" data-bind="click: toggleMenu">Locations</button>
             </div>
-            <!--ends the div for 'venues' and begins divs for BV-Folks and list-view-->
+            <!-- This displays the markers on the map when the Locations button is clicked -->
             <div class='BV-folks' data-bind='visible:showMenu'>
                 <div class="list-group list-view" data-bind="foreach: places">
                     <a href="#" class="list-group-item" data-bind="click: $parent.listClick"> <span data-bind="text: nameTitle, click: $parent.listClick"></span>
@@ -63,9 +58,25 @@
 
         <div id="map_canvas">
         </div>
-        <!--closing of container div-->
-    </div>-->
+    </div>
 
+    <!--div containing html modal for error message on failed callback-->
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Unable to Load FourSquare Locations</h4>
+                </div>
+                <div class="modal-body">
+                    <p>please check the internet connection</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/app.js"></script>
 
