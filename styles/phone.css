@@ -47,11 +47,11 @@ body,
 /*styles for div containing the main button*/
 .mainbutton {
   list-style-type: none;
-  margin: 3em;
+  /*margin: 3em;*/
   border: none;
   position: absolute;
   top: 0px;
-  right: 15px;
+  right: 0px;
   z-index: 10;
 }
 
@@ -59,7 +59,7 @@ body,
 .location-button-def {
   list-style-type: none;
   min-width: 15%;
-  max-width:50%;
+  max-width:25%;
   background-color: #fff;
   border-top: solid;
   border-bottom: solid;
@@ -67,10 +67,10 @@ body,
   border-width: 1px;
   border-color: #337ab7;
   position: absolute;
-  top: 0px;
+  top: 20px;
   right: 0px;
   z-index: 10;
-  margin: 50px 15px 0 0;
+  margin: 50px 0 0 0;
   max-height: 300px;
   overflow: auto;
 }

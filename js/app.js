@@ -19,7 +19,7 @@ var content = document.createElement("DIV");
 // Upon clicking markers on google map, this is the infowindow that pops up.  Sets the size
 var infowindow = new google.maps.InfoWindow({
   content: content,
-  maxWidth: 200
+  maxWidth: 100
 });
 
 /* ===== Model ===== */
