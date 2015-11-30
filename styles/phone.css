@@ -27,12 +27,12 @@ body,
 
 /*styles for making sure map has functioning z index as well as no white space from the container div*/
 #map_canvas img{
-    max-width: none;
-    position: relative;
-    z-index: 2;
-    height: 100%; 
-    margin: 0; 
-    padding: 0;
+  max-width: none;
+  position: relative;
+  z-index: 2;
+  height: 100%; 
+  margin: 0; 
+  padding: 0;
 }
 
 /* Search bar positioning and styling */

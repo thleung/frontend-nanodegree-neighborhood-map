@@ -1,7 +1,8 @@
+'use strict';
 var $myModal = $('#myModal');
 
 // Checks to see if browser online
-online = window.navigator.onLine;
+var online = window.navigator.onLine;
 window.addEventListener("offline", function(e) {alert("Please check your internet connection!");});
 
 window.addEventListener("online", function(e) {alert("Internet onnection is back up!");});
@@ -22,7 +23,6 @@ var infowindow = new google.maps.InfoWindow({
 
 /* ===== Model ===== */
 var Location = function( name, title, address, phone, latitude, longitude, pic, web) {
-
 	// Attributes of model Location
 	this.name = ko.observable(name);
 	this.title = ko.observable(title);
@@ -33,13 +33,12 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 	this.pic = ko.observable(pic);
 	this.web = ko.observable(web);
   this.nameTitle = ko.computed(function() {
- return this.name() + " " + this.title();
- }, this);
+    return this.name() + " " + this.title();
+  }, this);
 
 	// This is the info in the infowindow that pops up when marker is clicked
 	// _blank opens link in new tab, not in current tab so it does not exit google map
 	this.infoLinkHtml = ko.computed(function() {
-		//console.log("inside infoLinkHtml, web: " + web);
   	return '<h4>'+ name + '</h4>' + '<img src=' + pic +
     	'>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' + '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>';
  	}, this);
@@ -56,20 +55,18 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 
 	// listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
- 		//console.log("marker event web: " + web);
     infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
       '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
       '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
-      //console.log('<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
       infowindow.open(map, this);
 	});
-}
+};
 
 // This is the initial list of locations to be added to markers
 var locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
-          new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org"),
-          new Location("Grassy Pond Conservation Area", "Park", "Acton", "(978) 929-6640", 42.501478, -71.448746, "images/grassypondpanorama.jpg" , "http://actontrails.org/DescGrassyPond.htm")
-  ];
+  new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org"),
+  new Location("Grassy Pond Conservation Area", "Park", "Acton", "(978) 929-6640", 42.501478, -71.448746, "images/grassypondpanorama.jpg" , "http://actontrails.org/DescGrassyPond.htm")
+];
 
 // The locations that fourSquare api will be used to find
 var fourSquareList = {
@@ -88,29 +85,31 @@ var markers = [];
 // If map is passed in, sets markers on map.
 // If null is passed in, it removes the markers on map instead.
 var setAllMap = function setAllMap(map) {
-  //console.log("setAllMap: marker.length: " + markers.length);
   for (var i = 0; i < markers.length; i++) {
   	console.log(i);
     var mark = markers[i];
     mark.setMap(map);
   }
-}
+};
 
 // Clears the markers on the map
 function clearMarkers() {
-  //console.log("clearing markers on map, by setting setAllMap to null");
-  setAllMap(null);
+  //setAllMap(null);
+  for (var i=0; i < markers.length; i++) {
+    markers[i].setVisible(false);
+  }
 }
 
 // Display markers on map
 function showMarkers() {
-  //console.log("inside showMarkers, ready to show markers in array by setting setAllMap to map");
-  setAllMap(map);
+  //setAllMap(map);
+  for (var i=0; i < markers.length; i++) {
+    markers[i].setVisible(true);
+  }
 }
 
 // Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
-  //console.log("deleting markers");
   clearMarkers();
   markers = [];
 }
@@ -118,35 +117,33 @@ function deleteMarkers() {
 /* ===== View ===== */
 var displayMapModel = function() {
 
-	var self = this;
+  var self = this;
 
   self.showMenu = ko.observable(false);
   self.toggleMenu = function () {
     $( ".location-button-def" ).toggle('fast');
   };
 
-	//function to add a marker to the markers array
+  //function to add a marker to the markers observableArray
   var addMarker = function () {
     for (var i = 0; i < self.places().length; i++) {
       markers.push(self.places()[i].marker);
-      //console.log("added marker");
     }
- 	};
+  };
 
- 	// add markers to list
- 	for (var i =0; i < locationList.length; i++) {
- 		markers.push(locationList[i].marker);
- 	}
+  // add markers to list
+  for (var i =0; i < locationList.length; i++) {
+    markers.push(locationList[i].marker);
+  }
 
   // Data initially loaded
   var loadData = function (){
     self.places = ko.observableArray();
     self.placeMarkers = function() {
-      console.log("placeMarkers: places length: " + self.places().length);
       for (var i = 0; i < self.places().length; i++) {
         addMarker();
-        }
-        showMarkers();
+      }
+      showMarkers();
     };
 
     // Ajax call for places in foursquare
@@ -207,37 +204,33 @@ var displayMapModel = function() {
    *  the search is set to the location's name and
    *  title 
    */
-	self.filter = ko.observable('');
-	self.temp = ko.observableArray();
+  self.filter = ko.observable('');
+  self.temp = ko.observableArray();
   self.search = function () {
-    	map.setCenter({lat: 42.4850931, lng: -71.43284});
-    	infowindow.close();
-    	var filter = self.filter();
-      //console.log("right before deleteMarker running");
-    	deleteMarkers();
-    	self.places.removeAll();
-      //console.log("places length: " + self.places.length);
-    	var len = locationList.length;
-    	for (var i = 0; i < len; i++) {
-        // If the venue location name or title matches the search parameter, keep it
-    		if ((locationList)[i].nameTitle().toLowerCase().indexOf(filter.toLowerCase()) >= 0 ) {
-        		self.temp().push(locationList[i]);    
-        	}
-    	}
-      // If there is no match on search, want something for user to see in search bar
-    	if (self.temp().length === 0) {
-    		self.places.push(new Place('There is no match on the search', "", '', '', '', ''));
-    	}
-    	self.places(self.temp());
-    	self.placeMarkers();
+    map.setCenter({lat: 42.4850931, lng: -71.43284});
+    infowindow.close();
+    //var filter = self.filter();
+    deleteMarkers();
+    self.places.removeAll();
+    var len = locationList.length;
+    for (var i = 0; i < len; i++) {
+      // If the venue location name or title matches the search parameter, keep it
+      if ((locationList)[i].nameTitle().toLowerCase().indexOf(self.filter().toLowerCase()) >= 0 ) {
+        self.temp().push(locationList[i]);    
+      }
+    }
+      
+    // If there is no match on search, want something for user to see in search bar
+    if (self.temp().length === 0) {
+      self.places.push(new Place('There is no match on the search', "", '', '', '', ''));
+    }
+    self.places(self.temp());
+    self.placeMarkers();
   };
 
-  //
   self.listClick = function(place) {
-    var mark = place.marker;
-    google.maps.event.trigger(mark,"click");
+    google.maps.event.trigger(place.marker,"click");
   };
-
 };
 
 ko.applyBindings(new displayMapModel());
