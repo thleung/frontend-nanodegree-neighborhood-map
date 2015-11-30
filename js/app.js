@@ -49,17 +49,6 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
   this.nameTitle = ko.computed(function() {
     return self.name() + " " + self.title();
   }, this);
-  this.selected = ko.observable(false);
-
-  this.setSelected = function(selected) {
-    self.selected(selected);
-  };
-
-  this.selectedState = ko.computed(function() {
-    if(self.selected()) {
-      this.marker.setIcon('images/blue_MarkerO.png');
-    }
-  });
 
 	// This is the info in the infowindow that pops up when marker is clicked
 	// _blank opens link in new tab, not in current tab so it does not exit google map
@@ -84,7 +73,12 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 
 	// listener to add the information window to each marker
   google.maps.event.addListener(this.marker, 'click', function() {
-    //self.marker.setIcon('images/blue_MarkerO.png');
+    map.panTo(self.marker.position);  // pan view to marker 
+    self.marker.setAnimation(google.maps.Animation.BOUNCE); // make marker bounce upon selection
+    // set length of bounce
+    setTimeout(function(){
+      self.marker.setAnimation(null);
+    }, 1450);
     infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
       '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
       '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
