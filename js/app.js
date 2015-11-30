@@ -35,6 +35,8 @@ var infowindow = new google.maps.InfoWindow({
 
 /* ===== Model ===== */
 var Location = function( name, title, address, phone, latitude, longitude, pic, web) {
+
+  var self = this;
 	// Attributes of model Location
 	this.name = ko.observable(name);
 	this.title = ko.observable(title);
@@ -45,8 +47,19 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 	this.pic = ko.observable(pic);
 	this.web = ko.observable(web);
   this.nameTitle = ko.computed(function() {
-    return this.name() + " " + this.title();
+    return self.name() + " " + self.title();
   }, this);
+  this.selected = ko.observable(false);
+
+  this.setSelected = function(selected) {
+    self.selected(selected);
+  };
+
+  this.selectedState = ko.computed(function() {
+    if(self.selected()) {
+      this.marker.setIcon('images/blue_MarkerO.png');
+    }
+  });
 
 	// This is the info in the infowindow that pops up when marker is clicked
 	// _blank opens link in new tab, not in current tab so it does not exit google map
@@ -64,14 +77,14 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
     position: myLatLng,
     map: map,
     icon: 'images/red_MarkerO.png',
-    content: this.infoLinkHtml()
+    content: self.infoLinkHtml()
 	});
-  
+
   bounds.extend(myLatLng);
 
 	// listener to add the information window to each marker
   google.maps.event.addListener(this.marker, 'click', function() {
-    //this.marker.setIcon('images/blue_MarkerO.png');
+    //self.marker.setIcon('images/blue_MarkerO.png');
     infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
       '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
       '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
