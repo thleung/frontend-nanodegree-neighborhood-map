@@ -53,17 +53,30 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
     //position: new google.maps.LatLng(latitude,longitude),
     position: myLatLng,
     map: map,
+    icon: 'https://www.google.com/mapfiles/marker_black.png',
     content: this.infoLinkHtml()
 	});
+  
   bounds.extend(myLatLng);
 
 	// listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
+    //this.marker.setIcon('https://www.google.com/mapfiles/marker_black.png');
+    toggleBounce();
     infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
       '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
       '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
       infowindow.open(map, this);
+
 	});
+
+  function toggleBounce() {
+    if (this.marker.getAnimation() !== null) {
+      this.marker.setAnimation(null);
+    } else {
+      this.marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+  }
 };
 
 // This is the initial list of locations to be added to markers
@@ -202,9 +215,13 @@ var displayMapModel = function() {
   self.filter = ko.observable('');
   self.temp = ko.observableArray();
   self.search = function () {
+    // This checks if Location bar list is visible to user when searching, if not then open
+    if ( $( ".location-button-def" ).is( ":hidden" ) ) {
+      $( ".location-button-def" ).toggle('on');
+    }
+    
     map.setCenter({lat: 42.4850931, lng: -71.43284});
     infowindow.close();
-    //var filter = self.filter();
     deleteMarkers();
     self.places.removeAll();
     var len = locationList.length;
@@ -224,6 +241,7 @@ var displayMapModel = function() {
     map.fitBounds(bounds);
   };
 
+  // When clicking on locations in location bar, it will move to the selected marker on the map
   self.listClick = function(place) {
     google.maps.event.trigger(place.marker,"click");
   };

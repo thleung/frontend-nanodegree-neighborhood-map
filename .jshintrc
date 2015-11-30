@@ -1,0 +1,9 @@
+{
+    // Predefined globals whom JSHint will ignore.
+    "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
+    "jquery"        : true,
+    "globals": {
+        "ko":       : true,
+        "google":   : true   
+    }
+}
