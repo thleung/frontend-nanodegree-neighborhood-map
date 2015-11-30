@@ -62,7 +62,7 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 	// listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
     //this.marker.setIcon('https://www.google.com/mapfiles/marker_black.png');
-    toggleBounce();
+    //toggleBounce();
     infowindow.setContent('<h4>'+ name + '</h4>' + '<img src=' + pic +
       '>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' +
       '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>');
@@ -70,13 +70,13 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 
 	});
 
-  function toggleBounce() {
+  /*function toggleBounce() {
     if (this.marker.getAnimation() !== null) {
       this.marker.setAnimation(null);
     } else {
       this.marker.setAnimation(google.maps.Animation.BOUNCE);
     }
-  }
+  }*/
 };
 
 // This is the initial list of locations to be added to markers
@@ -234,7 +234,7 @@ var displayMapModel = function() {
       
     // If there is no match on search, want something for user to see in search bar
     if (self.temp().length === 0) {
-      self.places.push(new Location('There is no match on the search', "", '', '', '', ''));
+      self.places.push(new Location('There is no match on the search', "", '', '', 42.4850931, -71.43284, '', ''));
     }
     self.places(self.temp());
     self.placeMarkers();
