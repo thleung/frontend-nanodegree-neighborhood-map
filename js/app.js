@@ -1,4 +1,3 @@
-//"use strict";
 var $myModal = $('#myModal');
 
 /*var count = 0;
@@ -255,4 +254,6 @@ var displayMapModel = function() {
   };
 };
 
-ko.applyBindings(new displayMapModel());
+$(function(){
+  ko.applyBindings(new displayMapModel());
+});
