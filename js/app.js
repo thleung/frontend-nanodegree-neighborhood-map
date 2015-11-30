@@ -149,10 +149,25 @@ var googleSuccess = function() {
         var urlFourSquare = 'https://api.foursquare.com/v2/venues/' + id + '?&client_id=EWW4OGHIEC44JKVDUQF2VYOVIT4LEHYN5D13QZDOTFGDXA2C' +
           '&client_secret=VCN1IO4NYUBECLHW3I2IXXNK55CJ3532ESM53IGGSCFC11ET&v=20151027&m=foursquare';
 
+        var timeOutId = 0;
+        function callBeforeAjax() {
+          timeOutId = setTimeout($.ajax, 10000);
+        }
 		    $.ajax({
+          beforeSend: callBeforeAjax,
 		      url: urlFourSquare,
           dataType: 'jsonp',
           success: function(response){  // If successful call, pull these data from foursquare
+
+            /*if (response == 'True') {
+              clearTimeout(timeOutId);
+            } else {
+              timeOutId = setTimeout($.ajax, 10000);
+            }*/
+            if (response == 'True') {
+              clearTimeout(timeOutId);
+            }
+            
             var venue = response.response.venue;
             var name = venue.name;
             var categories = venue.categories[0].name;
