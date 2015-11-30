@@ -8,6 +8,12 @@ body,
   z-index: 0;
 }
 
+.scrollFix {
+    line-height: 1.35;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 /*styles for setting the container div to the same as the map canvas height and width*/
 .container-fluid {
   height:100%;

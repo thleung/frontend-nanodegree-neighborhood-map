@@ -10,7 +10,7 @@ var googleSuccess = function() {
 
   // Upon clicking markers on google map, this is the infowindow that pops up.  Sets the size
   var infowindow = new google.maps.InfoWindow({
-    content: content,
+    content: '<div class="scrollFix">'+content+'</div>',
     maxWidth: 100
   });
 
@@ -154,7 +154,7 @@ var googleSuccess = function() {
           timeOutId = setTimeout($.ajax, 10000);
         }
 		    $.ajax({
-          beforeSend: callBeforeAjax,
+          //beforeSend: callBeforeAjax,
 		      url: urlFourSquare,
           dataType: 'jsonp',
           success: function(response){  // If successful call, pull these data from foursquare
@@ -167,7 +167,7 @@ var googleSuccess = function() {
             if (response == 'True') {
               clearTimeout(timeOutId);
             }
-            
+
             var venue = response.response.venue;
             var name = venue.name;
             var categories = venue.categories[0].name;
