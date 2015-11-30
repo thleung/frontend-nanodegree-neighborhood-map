@@ -1,8 +1,7 @@
-'use strict';
+//"use strict";
 var $myModal = $('#myModal');
 
 // Checks to see if browser online
-var online = window.navigator.onLine;
 window.addEventListener("offline", function(e) {alert("Please check your internet connection!");});
 
 window.addEventListener("online", function(e) {alert("Internet onnection is back up!");});
@@ -81,18 +80,7 @@ var fourSquareList = {
 
 var markers = [];
 
-// Sets the map on all markers in the array.
-// If map is passed in, sets markers on map.
-// If null is passed in, it removes the markers on map instead.
-var setAllMap = function setAllMap(map) {
-  for (var i = 0; i < markers.length; i++) {
-  	console.log(i);
-    var mark = markers[i];
-    mark.setMap(map);
-  }
-};
-
-// Clears the markers on the map
+// Set markers on the map to invisible
 function clearMarkers() {
   //setAllMap(null);
   for (var i=0; i < markers.length; i++) {
@@ -113,6 +101,7 @@ function deleteMarkers() {
   clearMarkers();
   markers = [];
 }
+
 
 /* ===== View ===== */
 var displayMapModel = function() {
@@ -158,8 +147,6 @@ var displayMapModel = function() {
         success: function(response){  // If successful call, pull these data from foursquare
           var venue = response.response.venue;
           var name = venue.name;
-          var id = venue.id;
-          var location = venue.location;
           var categories = venue.categories[0].name;
           var urlVenue = venue.url;
           var latitude = venue.location.lat;
@@ -222,7 +209,7 @@ var displayMapModel = function() {
       
     // If there is no match on search, want something for user to see in search bar
     if (self.temp().length === 0) {
-      self.places.push(new Place('There is no match on the search', "", '', '', '', ''));
+      self.places.push(new Location('There is no match on the search', "", '', '', '', ''));
     }
     self.places(self.temp());
     self.placeMarkers();
