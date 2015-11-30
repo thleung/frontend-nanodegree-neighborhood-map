@@ -1,6 +1,9 @@
 //"use strict";
 var $myModal = $('#myModal');
 
+// Bounds of the map
+var bounds = new google.maps.LatLngBounds();
+
 // Checks to see if browser online
 window.addEventListener("offline", function(e) {alert("Please check your internet connection!");});
 
@@ -42,15 +45,17 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
     	'>' + '<br>' + title + '</br>' + '<br>' + phone + '</br>' + '<br>' + '<a href="' + web + '" target="_blank">Visit Site' + '</a><br>';
  	}, this);
 
-	
+	var myLatLng = new google.maps.LatLng(latitude,longitude);
 	// Create marker for location on google map.  Contains name, title, position and content for marker.
 	this.marker = new google.maps.Marker({
 		name: name,
 		title: title,
-    	position: new google.maps.LatLng(latitude,longitude),
-    	map: map,
-    	content: this.infoLinkHtml()
+    //position: new google.maps.LatLng(latitude,longitude),
+    position: myLatLng,
+    map: map,
+    content: this.infoLinkHtml()
 	});
+  bounds.extend(myLatLng);
 
 	// listener to add the information window to each marker
  	google.maps.event.addListener(this.marker, 'click', function() {
@@ -62,9 +67,11 @@ var Location = function( name, title, address, phone, latitude, longitude, pic, 
 };
 
 // This is the initial list of locations to be added to markers
-var locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, "images/arboretum.jpg", "http://www.actonarboretum.org"),
-  new Location("Discovery Museum", "Museum", "177 Main St", "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org"),
-  new Location("Grassy Pond Conservation Area", "Park", "Acton", "(978) 929-6640", 42.501478, -71.448746, "images/grassypondpanorama.jpg" , "http://actontrails.org/DescGrassyPond.htm")
+var locationList = [new Location("Acton Arboretum", "Park", "Taylor Rd", "(978) 264-9631", 42.480561, -71.434777, 
+  "images/arboretum.jpg", "http://www.actonarboretum.org"), new Location("Discovery Museum", "Museum", "177 Main St", 
+  "(978) 264-4200", 42.4647833, -71.4561531, "images/dm_face.jpg", "http://www.discoverymuseums.org"),
+  new Location("Grassy Pond Conservation Area", "Park", "Acton", "(978) 929-6640", 42.501478, -71.448746, 
+  "images/grassypondpanorama.jpg" , "http://actontrails.org/DescGrassyPond.htm")
 ];
 
 // The locations that fourSquare api will be used to find
@@ -172,6 +179,7 @@ var displayMapModel = function() {
 
           self.places(locationList.slice(0));
           self.placeMarkers();  // put into marker
+          map.fitBounds(bounds);
         },
           error: function (){
             $myModal.modal('show');
@@ -213,6 +221,7 @@ var displayMapModel = function() {
     }
     self.places(self.temp());
     self.placeMarkers();
+    map.fitBounds(bounds);
   };
 
   self.listClick = function(place) {
