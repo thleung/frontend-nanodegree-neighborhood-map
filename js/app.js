@@ -1,15 +1,5 @@
 var $myModal = $('#myModal');
 
-/*var count = 0;
-while (typeof google === 'undefined' || google === null) {
-    // google is undefined or null
-    for (var i=0; i<1000; i++) {
-      // use this to wait until google defined 
-    }
-    console.log(count);
-    count = count + 1;
-}*/
-
 // Bounds of the map
 var bounds = new google.maps.LatLngBounds();
 
@@ -109,7 +99,6 @@ var markers = [];
 
 // Set markers on the map to invisible
 function clearMarkers() {
-  //setAllMap(null);
   for (var i=0; i < markers.length; i++) {
     markers[i].setVisible(false);
   }
@@ -117,7 +106,6 @@ function clearMarkers() {
 
 // Display markers on map
 function showMarkers() {
-  //setAllMap(map);
   for (var i=0; i < markers.length; i++) {
     markers[i].setVisible(true);
   }
